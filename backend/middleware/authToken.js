@@ -22,7 +22,7 @@ async function authToken(req,res,next){
             }
 
             req.userId = decoded?._id
-
+            req.userRole = decoded?.role;
             next()
         });
 

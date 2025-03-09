@@ -8,9 +8,9 @@ import image5 from '../assest/banner/img5.webp'
 
 import image1Mobile from '../assest/banner/img1_mobile.jpg'
 import image2Mobile from '../assest/banner/img2_mobile.webp'
-import image3Mobile from '../assest/banner/img3_mobile.jpg'
-import image4Mobile from '../assest/banner/img4_mobile.jpg'
-import image5Mobile from '../assest/banner/img5_mobile.png'
+import image3Mobile from '../assest/banner/img1_mobile.jpg'
+import image4Mobile from '../assest/banner/img1_mobile.jpg'
+import image5Mobile from '../assest/banner/img1_mobile.jpg'
 
 import { FaAngleRight } from "react-icons/fa6";
 import { FaAngleLeft } from "react-icons/fa6";

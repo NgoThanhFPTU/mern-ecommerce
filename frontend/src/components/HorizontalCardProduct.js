@@ -26,8 +26,6 @@ const HorizontalCardProduct = ({category, heading}) => {
         setLoading(true)
         const categoryProduct = await fetchCategoryWiseProduct(category)
         setLoading(false)
-
-        console.log("horizontal data",categoryProduct.data)
         setData(categoryProduct?.data)
     }
 
@@ -76,7 +74,7 @@ const HorizontalCardProduct = ({category, heading}) => {
            ) : (
             data.map((product,index)=>{
                 return(
-                    <Link to={"product/"+product?._id} className='w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-36 bg-white rounded-sm shadow flex'>
+                    <Link style={{minWidth:"360px"}} alt={product.productName} to={"product/"+product?._id} className='w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-36 bg-white rounded-sm shadow flex'>
                         <div className='bg-slate-200 h-full p-4 min-w-[120px] md:min-w-[145px]'>
                             <img src={product.productImage[0]} className='object-scale-down h-full hover:scale-110 transition-all'/>
                         </div>

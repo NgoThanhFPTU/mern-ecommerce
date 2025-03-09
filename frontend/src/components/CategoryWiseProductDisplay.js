@@ -19,24 +19,16 @@ const CategroyWiseProductDisplay = ({category, heading}) => {
        fetchUserAddToCart()
     }
 
-
-
-
     const fetchData = async() =>{
         setLoading(true)
         const categoryProduct = await fetchCategoryWiseProduct(category)
         setLoading(false)
-
-        console.log("horizontal data",categoryProduct.data)
         setData(categoryProduct?.data)
     }
 
     useEffect(()=>{
         fetchData()
     },[])
-
-
-
 
   return (
     <div className='container mx-auto px-4 my-6 relative'>

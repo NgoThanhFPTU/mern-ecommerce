@@ -21,12 +21,11 @@ async function userSignInController(req, res) {
 
     const checkPassword = await bcrypt.compare(password, user.password);
 
-    console.log("checkPassoword", checkPassword);
-
     if (checkPassword) {
       const tokenData = {
         _id: user._id,
         email: user.email,
+        role: user.role,
       };
       const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {
         expiresIn: 60 * 60 * 8,
