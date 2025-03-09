@@ -14,7 +14,6 @@ import { setUserDetails } from './store/userSlice';
 function App() {
   const dispatch = useDispatch()
   const [cartProductCount,setCartProductCount] = useState(0)
-  const [role, setRole] = useState(null);
 
   const fetchUserDetails = async()=>{
       const dataResponse = await fetch(SummaryApi.current_user.url,{
@@ -25,7 +24,6 @@ function App() {
       const dataApi = await dataResponse.json()
 
       if(dataApi.success){
-        setRole(dataApi.data.role);
         dispatch(setUserDetails(dataApi.data))
       }
   }
@@ -53,8 +51,7 @@ function App() {
       <Context.Provider value={{
           fetchUserDetails, // user detail fetch 
           cartProductCount, // current user add to cart product count,
-          fetchUserAddToCart,
-          role
+          fetchUserAddToCart
       }}>
         <ToastContainer 
           position='top-center'
