@@ -7,8 +7,6 @@ const addToCartController = async(req,res)=>{
 
         const isProductAvailable = await addToCartModel.findOne({ productId })
 
-        console.log("isProductAvailabl   ",isProductAvailable)
-
         if(isProductAvailable){
             return res.json({
                 message : "Already exits in Add to cart",
