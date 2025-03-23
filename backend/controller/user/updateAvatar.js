@@ -1,13 +1,13 @@
 const userModel = require("../../models/userModel");
 
-async function banUser(req, res) {
+async function updateAvatar(req, res) {
   try {
-    const { userId, isBanned } = req.body;  
+    const { userId, profilePic } = req.body;  
     const updatedUser = await userModel.findByIdAndUpdate(
       userId,
-      { isBanned },
+      { profilePic },
       { new: true }
-    );
+    );    
 
     if (!updatedUser) {
       return res.status(404).json({
@@ -19,7 +19,7 @@ async function banUser(req, res) {
 
     res.json({
       data: updatedUser,
-      message: `User has been ${isBanned ? "banned" : "unbanned"}.`,
+      message: `User has been update avatar.`,
       success: true,
       error: false,
     });
@@ -32,4 +32,4 @@ async function banUser(req, res) {
   }
 }
 
-module.exports = banUser
+module.exports = updateAvatar

@@ -18,7 +18,8 @@
     "web-vitals": "^2.1.4",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.17.2",
-    "sweetalert2-react-content": "^5.1.0"
+    "sweetalert2-react-content": "^5.1.0",
+    "firebase": "^10.13.0"
   },
   "scripts": {
     "start": "react-scripts start",
