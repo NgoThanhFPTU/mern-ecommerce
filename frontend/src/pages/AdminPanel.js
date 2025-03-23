@@ -59,7 +59,7 @@ const AdminPanel = () => {
                               "Your avatar has been updated.",
                               "success"
                             );
-                          }, 500);
+                          }, 200);
                     } else {
                         console.error("Failed to update avatar:", responseData.message);
                     }
@@ -104,6 +104,9 @@ const AdminPanel = () => {
                         </Link>
                         <Link to={"all-products"} className="px-2 py-1 hover:bg-slate-100">
                             All product
+                        </Link>
+                        <Link to={"all-products"} className="px-2 py-1 hover:bg-slate-100">
+                            Revenue statistics 
                         </Link>
                     </nav>
                 </div>

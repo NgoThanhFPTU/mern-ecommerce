@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import SummaryApi from '../common';
 import { toast } from 'react-toastify';
 import Context from '../context';
+import SweetAlert from "sweetalert";
 
 const Login = () => {
     const [showPassword,setShowPassword] = useState(false)
@@ -42,6 +43,15 @@ const Login = () => {
 
         const dataApi = await dataResponse.json()
 
+        if (dataApi.isBanned) {
+            SweetAlert(
+                "Your account has been banned!",
+                "Please contact support for assistance.",
+                "error"
+            );
+            return;
+        }
+
         if(dataApi.success){
             toast.success(dataApi.message)
             navigate('/')
@@ -49,13 +59,7 @@ const Login = () => {
             fetchUserAddToCart()
         }
 
-        if(dataApi.error){
-            toast.error(dataApi.message)
-        }
-
     }
-
-    console.log("data login",data)
     
   return (
     <section id='login'>

@@ -19,6 +19,15 @@ async function userSignInController(req, res) {
       throw new Error("User not found");
     }
 
+    if (user.isBanned) {
+      return res.status(403).json({
+        message: "Your account has been banned. Please contact support.",
+        error: true,
+        success: false,
+        isBanned: true
+      });
+    }
+
     const checkPassword = await bcrypt.compare(password, user.password);
     
     if (checkPassword) {
