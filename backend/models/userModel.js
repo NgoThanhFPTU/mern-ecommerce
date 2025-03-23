@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
     password : String,
     profilePic : String,
     role : String,
+    isBanned: {
+        type: Boolean,
+        default: false,
+      },
 },{
     timestamps : true
 })

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import SummaryApi from '../common'
 import { toast } from 'react-toastify'
 import moment from 'moment'
-import { MdModeEdit } from "react-icons/md";
+import { MdModeEdit,MdBlock  } from "react-icons/md";
 import ChangeUserRole from '../components/ChangeUserRole';
+import Swal from "sweetalert2";
 
 const AllUsers = () => {
     const [allUser,setAllUsers] = useState([])
@@ -23,6 +24,8 @@ const AllUsers = () => {
 
         const dataResponse = await fetchData.json()
 
+        console.log(dataResponse.data);
+        
         if(dataResponse.success){
             setAllUsers(dataResponse.data)
         }
@@ -32,6 +35,30 @@ const AllUsers = () => {
         }
 
     }
+
+    const handleBanUser = async (userId) => {
+        alert(userId);
+        
+        if (window.confirm("Are you sure you want to ban this account?")) {
+          try {
+            const response = await fetch(`/api/users/ban/${userId}`, {
+              method: "POST",
+              credentials: "include",
+            });
+      
+            const result = await response.json();
+      
+            if (result.success) {
+              alert("User has been banned successfully.");
+              fetchAllUsers();
+            } else {
+              alert("Failed to ban user.");
+            }
+          } catch (error) {
+            console.error("Error banning user:", error);
+          }
+        }
+      };
 
     useEffect(()=>{
         fetchAllUsers()
@@ -55,7 +82,7 @@ const AllUsers = () => {
                     allUser.map((el,index) => {
                         return(
                             <tr>
-                                <td>{index+1}</td>
+                                <td key={el._id}>{index+1}</td>
                                 <td>{el?.name}</td>
                                 <td>{el?.email}</td>
                                 <td>{el?.role}</td>
@@ -70,6 +97,8 @@ const AllUsers = () => {
                                     >
                                         <MdModeEdit/>
                                     </button>
+                                    <button onClick={() => handleBanUser(el._id)} className='className="bg-red-100 p-2 rounded-full cursor-pointer hover:bg-red-500 hover:text-white' >
+                                        <MdBlock /></button>
                                 </td>
                             </tr>
                         )
