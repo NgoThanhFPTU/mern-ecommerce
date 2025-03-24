@@ -190,7 +190,7 @@ export default function Profile() {
 
       <div className="w-3/4 p-8">
         {selectedTab === "account" ? (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-start">
             <h1 className="text-3xl font-bold text-gray-800 mb-6">
               Quản lý tài khoản
             </h1>
@@ -215,7 +215,7 @@ export default function Profile() {
                       className="w-28 h-28 rounded-full shadow-md object-cover transition-opacity duration-300 group-hover:opacity-70"
                     />
                   ) : (
-                    <FaRegCircleUser className="w-28 h-28 text-gray-400" />
+                    <FaRegCircleUser className="w-28 h-28" />
                   )}
                   <span className="rounded-full absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                     Thay đổi ảnh
@@ -274,10 +274,10 @@ export default function Profile() {
             </div>
           </div>
         ) : (
-          // (
-          //   <div>
-          //     <h1 className="text-2xl font-bold text-gray-800 mb-6">Lịch sử đơn hàng</h1>
-          //     <div className="bg-white p-6 rounded-lg shadow-md max-w-md">
+          (
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800 mb-6">Lịch sử đơn hàng</h1>
+          {/* //     <div className="bg-white p-6 rounded-lg shadow-md max-w-md">
           //       {user.orders.length ? (
           //         user.orders.map((order, index) => (
           //           <div key={index} className="p-4 border-b last:border-b-0">
@@ -289,10 +289,9 @@ export default function Profile() {
           //       ) : (
           //         <p className="text-gray-500">Không có đơn hàng nào.</p>
           //       )}
-          //     </div>
-          //   </div>
-          // )
-          <></>
+          //     </div> */}
+            </div>
+          )
         )}
       </div>
     </div>
