@@ -13,8 +13,6 @@ app.use(
   })
 );
 
-console.log("Allowed frontend URL:", process.env.FRONTEND_URL);
-
 app.use(express.json());
 app.use(cookieParser());
 
@@ -24,7 +22,6 @@ const PORT = 8080 || process.env.PORT;
 
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log("Kết nối với database");
     console.log("Sever đang chạy trên " + PORT);
   });
 });
