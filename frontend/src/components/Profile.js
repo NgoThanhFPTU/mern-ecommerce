@@ -30,39 +30,40 @@ export default function Profile() {
 
   const validateInput = () => {
     const PHONE_REGEX = /^[0-9]{10,11}$/;
-    const checkValid = { ...formData };
-    if (checkValid.name.length > 50) {
+    const trimmedName = formData.name.trim().replace(/\s+/g, " ");
+    const trimmedPhone = formData.phone.trim();
+    setFormData({ name: trimmedName, phone: trimmedPhone });
+    formData.name = trimmedName;
+    formData.phone = trimmedPhone;
+
+    if (trimmedName.length > 50) {
       Swal.fire(
         "Error!",
         `Name is too long! Maximum allowed is ${50} characters.`,
         "error"
       );
-      setFormData({
-        name: formData.name.substring(0, 50),
-        phone: formData.phone
-      })
-      
+      setFormData({ name: trimmedName.substring(0, 50), phone: trimmedPhone });
       return false;
     }
 
-    if (checkValid.phone.length > 11) {
+    if (trimmedPhone.length > 11) {
       Swal.fire(
         "Error!",
         `Phone number is too long! Maximum allowed is ${11} characters.`,
         "error"
       );
-
       return false;
     }
 
-    if (!PHONE_REGEX.test(checkValid.phone)) {
-        Swal.fire(
-          "Error!",
-          "Invalid phone number! It should contain only numbers and be 10-11 digits long.",
-          "error"
-        );
-        return false;
-      }
+    if (!PHONE_REGEX.test(trimmedPhone)) {
+      Swal.fire(
+        "Error!",
+        "Invalid phone number! It should contain only numbers and be 10-11 digits long.",
+        "error"
+      );
+      return false;
+    }
+
     return true;
   };
 
@@ -124,10 +125,15 @@ export default function Profile() {
         method: SummaryApi.updateProfile.method,
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user._id, ...formData }),
+        body: JSON.stringify({
+          userId: user._id,
+          name: formData.name.trim().replace(/\s+/g, " "),
+          phone: formData.phone.trim(),
+        }),
       });
 
       const responseData = await response.json();
+
       if (responseData.success) {
         dispatch(setUserDetails({ ...user, ...formData }));
         SweetAlert(
