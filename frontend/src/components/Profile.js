@@ -136,11 +136,13 @@ export default function Profile() {
 
       if (responseData.success) {
         dispatch(setUserDetails({ ...user, ...formData }));
-        SweetAlert(
-          "Update information success!",
-          "Thông tin đã được cập nhật",
-          "success"
-        );
+        setTimeout(() => {
+          SweetAlert(
+            "Update information success!",
+            "Thông tin đã được cập nhật",
+            "success"
+          );
+        }, 300);
         setEditing(false);
       } else {
         console.error("Error update:", responseData.message);
@@ -196,11 +198,11 @@ export default function Profile() {
             <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
               <div className="relative flex flex-col items-center mb-6">
                 <input
-                 type="file"
-                 accept="image/*"
-                 onChange={handleFileChange}
-                 className="hidden"
-                 id="avatarInput"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="avatarInput"
                 />
                 <label
                   htmlFor="avatarInput"
