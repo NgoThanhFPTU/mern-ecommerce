@@ -186,58 +186,65 @@ export default function Profile() {
         </ul>
       </div>
 
-      {/* Content */}
       <div className="w-3/4 p-8">
         {selectedTab === "account" ? (
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">
+          <div className="flex flex-col items-center">
+            <h1 className="text-3xl font-bold text-gray-800 mb-6">
               Quản lý tài khoản
             </h1>
-            <div className="bg-white p-6 rounded-lg shadow-md max-w-md">
-              <div className="flex flex-col items-center mb-4">
+
+            <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+              <div className="relative flex flex-col items-center mb-6">
                 <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  id="avatarInput"
+                 type="file"
+                 accept="image/*"
+                 onChange={handleFileChange}
+                 className="hidden"
+                 id="avatarInput"
                 />
-                <label htmlFor="avatarInput" className="cursor-pointer">
+                <label
+                  htmlFor="avatarInput"
+                  className="cursor-pointer relative group"
+                >
                   {user?.profilePic ? (
                     <img
                       src={user.profilePic}
                       alt="Profile"
-                      className="w-24 h-24 rounded-full shadow-md object-cover"
+                      className="w-28 h-28 rounded-full shadow-md object-cover transition-opacity duration-300 group-hover:opacity-70"
                     />
                   ) : (
-                    <FaRegCircleUser className="w-24 h-24 " />
+                    <FaRegCircleUser className="w-28 h-28 text-gray-400" />
                   )}
+                  <span className="rounded-full absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                    Thay đổi ảnh
+                  </span>
                 </label>
               </div>
+
               {editing ? (
                 <>
                   <input
                     type="text"
                     name="name"
-                    value={formData?.name}
+                    value={formData.name}
                     onChange={handleChange}
-                    className="border p-2 w-full mb-3 rounded"
+                    className="border border-gray-300 p-3 w-full mb-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                     placeholder="Tên đầy đủ"
                   />
-                  <p className="text-lg mb-2">
+                  <p className="text-gray-600 mb-2">
                     <strong>Email:</strong> {user.email}
                   </p>
                   <input
                     type="text"
                     name="phone"
-                    value={formData?.phone}
+                    value={formData.phone}
                     onChange={handleChange}
-                    className="border p-2 w-full mb-3 rounded"
+                    className="border border-gray-300 p-3 w-full mb-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                     placeholder="Số điện thoại"
                   />
                   <button
                     onClick={handleUpdateProfile}
-                    className="bg-blue-500 text-white p-2 rounded w-full"
+                    className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 transition-all"
                   >
                     Lưu thay đổi
                   </button>
@@ -245,17 +252,18 @@ export default function Profile() {
               ) : (
                 <>
                   <p className="text-lg mb-2">
-                    <strong>Tên:</strong> {user.name}
+                    <strong className="text-gray-700">Tên:</strong> {user.name}
                   </p>
                   <p className="text-lg mb-2">
-                    <strong>Email:</strong> {user.email}
+                    <strong className="text-gray-700">Email:</strong>{" "}
+                    {user.email}
                   </p>
-                  <p className="text-lg mb-2">
-                    <strong>SĐT:</strong> {user.phone}
+                  <p className="text-lg mb-4">
+                    <strong className="text-gray-700">SĐT:</strong> {user.phone}
                   </p>
                   <button
                     onClick={() => setEditing(true)}
-                    className="bg-gray-700 text-white p-2 rounded w-full"
+                    className="w-full bg-gray-700 text-white p-3 rounded-lg shadow-md hover:bg-gray-800 transition-all"
                   >
                     Chỉnh sửa
                   </button>
