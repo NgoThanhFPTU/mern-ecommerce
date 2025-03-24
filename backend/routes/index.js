@@ -11,6 +11,7 @@ const allUsers = require("../controller/user/allUsers");
 const updateUser = require("../controller/user/updateUser");
 const banUser = require("../controller/user/banUser");
 const updateAvatar = require("../controller/user/updateAvatar");
+const updateProfile = require("../controller/user/updateProfile");
 const UploadProductController = require("../controller/product/uploadProduct");
 const getProductController = require("../controller/product/getProduct");
 const updateProductController = require("../controller/product/updateProduct");
@@ -30,11 +31,15 @@ router.post("/signin", userSignInController);
 router.get("/user-details", authToken, userDetailsController);
 router.get("/userLogout", userLogout);
 
+// Account
+router.post("/update-avatar", authToken, updateAvatar);
+router.post("/update-profile", authToken, updateProfile);
+
 //admin panel
 router.get("/all-user", authToken, allUsers);
 router.post("/update-user", authToken, updateUser);
 router.post("/ban-user", authToken, banUser);
-router.post("/update-avatar", authToken, updateAvatar);
+
 
 //product
 router.post("/upload-product", authToken, UploadProductController);

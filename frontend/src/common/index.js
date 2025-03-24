@@ -29,6 +29,10 @@ const SummaryApi = {
         url : `${backendDomin}/api/update-avatar`,
         method : "post"
     },
+    updateProfile : {
+        url : `${backendDomin}/api/update-profile`,
+        method : "post"
+    },
     banUser : {
         url : `${backendDomin}/api/ban-user`,
         method : "post"
