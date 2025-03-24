@@ -7,6 +7,7 @@ import { setUserDetails } from "../store/userSlice";
 import SweetAlert from "sweetalert";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../helpers/firebaseConfig";
+import Swal from "sweetalert2";
 
 export default function Profile() {
   const user = useSelector((state) => state?.user?.user);
@@ -26,6 +27,44 @@ export default function Profile() {
       });
     }
   }, [user]);
+
+  const validateInput = () => {
+    const PHONE_REGEX = /^[0-9]{10,11}$/;
+    const checkValid = { ...formData };
+    if (checkValid.name.length > 50) {
+      Swal.fire(
+        "Error!",
+        `Name is too long! Maximum allowed is ${50} characters.`,
+        "error"
+      );
+      setFormData({
+        name: formData.name.substring(0, 50),
+        phone: formData.phone
+      })
+      
+      return false;
+    }
+
+    if (checkValid.phone.length > 11) {
+      Swal.fire(
+        "Error!",
+        `Phone number is too long! Maximum allowed is ${11} characters.`,
+        "error"
+      );
+
+      return false;
+    }
+
+    if (!PHONE_REGEX.test(checkValid.phone)) {
+        Swal.fire(
+          "Error!",
+          "Invalid phone number! It should contain only numbers and be 10-11 digits long.",
+          "error"
+        );
+        return false;
+      }
+    return true;
+  };
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -79,9 +118,8 @@ export default function Profile() {
   };
 
   const handleUpdateProfile = async () => {
+    if (!validateInput()) return;
     try {
-      console.log(formData);
-
       const response = await fetch(SummaryApi.updateProfile.url, {
         method: SummaryApi.updateProfile.method,
         credentials: "include",
