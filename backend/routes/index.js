@@ -10,6 +10,7 @@ const userLogout = require("../controller/user/userLogout");
 const allUsers = require("../controller/user/allUsers");
 const updateUser = require("../controller/user/updateUser");
 const banUser = require("../controller/user/banUser");
+const createOrder = require("../controller/user/createOrder");
 const updateAvatar = require("../controller/user/updateAvatar");
 const updateProfile = require("../controller/user/updateProfile");
 const UploadProductController = require("../controller/product/uploadProduct");
@@ -30,6 +31,9 @@ router.post("/signup", userSignUpController);
 router.post("/signin", userSignInController);
 router.get("/user-details", authToken, userDetailsController);
 router.get("/userLogout", userLogout);
+
+// Payment
+router.post("/create-order", authToken, createOrder);
 
 // Account
 router.post("/update-avatar", authToken, updateAvatar);

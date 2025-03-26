@@ -17,6 +17,10 @@ const SummaryApi = {
         url : `${backendDomin}/api/userLogout`,
         method : 'get'
     },
+    createOrder : {
+        url : `${backendDomin}/api/create-order`,
+        method : "post"
+    },
     allUser : {
         url : `${backendDomin}/api/all-user`,
         method : 'get'
