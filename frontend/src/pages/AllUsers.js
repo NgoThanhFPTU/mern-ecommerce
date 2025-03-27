@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import SummaryApi from "../common";
-import { toast } from "react-toastify";
 import moment from "moment";
 import { MdModeEdit, MdBlock } from "react-icons/md";
 import ChangeUserRole from "../components/ChangeUserRole";
 import Swal from "sweetalert2";
+import SweetAlert from "sweetalert";
 
 const AllUsers = () => {
   const [allUser, setAllUsers] = useState([]);
@@ -28,7 +28,11 @@ const AllUsers = () => {
     }
 
     if (dataResponse.error) {
-      toast.error(dataResponse.message);
+      SweetAlert(
+        "Failed to load user list!",
+        "An error occurred while fetching the user list. Please try again later.",
+        "error"
+      );
     }
   };
 
@@ -100,10 +104,16 @@ const AllUsers = () => {
         <tbody>
           {allUser.map((el, index) => {
             return (
-              <tr key={el._id} className={el.isBanned ? "bg-gray-200 text-red-500" : ""}>
+              <tr
+                key={el._id}
+                className={el.isBanned ? "bg-gray-200 text-red-500" : ""}
+              >
                 <td>{index + 1}</td>
                 <td>
-                  {el?.name} {el.isBanned && <span className="text-red-500">(Banned)</span>}
+                  {el?.name}{" "}
+                  {el.isBanned && (
+                    <span className="text-red-500">(Banned)</span>
+                  )}
                 </td>
                 <td>{el?.email}</td>
                 <td>{el?.role}</td>
@@ -126,7 +136,9 @@ const AllUsers = () => {
                     <MdModeEdit />
                   </button>
                   <button
-                    onClick={() => handleBanUnBanUser(el?._id, el?.name, el?.isBanned)}
+                    onClick={() =>
+                      handleBanUnBanUser(el?._id, el?.name, el?.isBanned)
+                    }
                     className="bg-red-100 p-2 rounded-full cursor-pointer hover:bg-red-500 hover:text-white"
                   >
                     <MdBlock />

@@ -16,7 +16,12 @@ async function userSignInController(req, res) {
     const user = await userModel.findOne({ email });
 
     if (!user) {
-      throw new Error("User not found");
+      return res.status(401).json({
+        message: "Your email don't exits!",
+        error: true,
+        success: false,
+        wrongEmail: true
+      });
     }
 
     if (user.isBanned) {
@@ -51,7 +56,12 @@ async function userSignInController(req, res) {
         error: false,
       });
     } else {
-      throw new Error("Please check Password");
+      return res.status(401).json({
+        message: "Your account wrong password!!!",
+        error: true,
+        success: false,
+        wrongPassword: true
+      });
     }
   } catch (err) {
     res.json({

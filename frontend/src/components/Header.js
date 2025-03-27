@@ -6,10 +6,10 @@ import { FaShoppingCart } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import SummaryApi from "../common";
-import { toast } from "react-toastify";
 import { setUserDetails } from "../store/userSlice";
 import ROLE from "../common/role";
 import Context from "../context";
+import SweetAlert from "sweetalert";
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
@@ -31,13 +31,19 @@ const Header = () => {
     const data = await fetchData.json();
 
     if (data.success) {
-      toast.success(data.message);
-      dispatch(setUserDetails(null));
-      navigate("/");
+      SweetAlert(
+        "Logged out successfully!",
+        "You have been logged out. See you next time!",
+        "success"
+      );
+      setTimeout(() => {
+        dispatch(setUserDetails(null));
+        navigate("/");
+      }, 300);
     }
 
     if (data.error) {
-      toast.error(data.message);
+      SweetAlert("Error logout app!", `${data.message}`, "error");
     }
   };
 

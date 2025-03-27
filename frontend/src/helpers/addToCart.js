@@ -1,5 +1,5 @@
-import SummaryApi from "../common"
-import { toast } from 'react-toastify'
+import SummaryApi from "../common";
+import SweetAlert from "sweetalert";
 
 const addToCart = async(e,id) =>{
     e?.stopPropagation()
@@ -19,11 +19,19 @@ const addToCart = async(e,id) =>{
     const responseData = await response.json()
 
     if(responseData.success){
-        toast.success(responseData.message)
+        SweetAlert(
+            "Product added successfully!",
+            "Your product has been added to the listing.",
+            "success"
+        );
     }
 
     if(responseData.error){
-        toast.error(responseData.message)
+        SweetAlert(
+            "Failed to add product!",
+            "This product is already in your cart. You cannot add it again.",
+            "error"
+        );
     }
 
 
