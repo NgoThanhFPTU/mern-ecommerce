@@ -6,8 +6,6 @@ const uploadImage = async (image) => {
     return null;
   }
 
-  console.log("Uploading image:", image.name);
-
   const formData = new FormData();
   formData.append("file", image);
   formData.append("upload_preset", "mern_product");
