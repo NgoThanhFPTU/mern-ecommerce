@@ -23,7 +23,7 @@ const addToCartController = async (req, res) => {
       return res.json({
         message: "Already exits in Add to cart",
         success: false,
-        error: true,
+        available: true,
       });
     }
 
