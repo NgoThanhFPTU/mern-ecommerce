@@ -3,21 +3,19 @@ const addToCartModel = require("../../models/cartProduct");
 
 const confirmPayment = async (req, res) => {
   try {
-    const { status, userId } = req.body;
-    console.log(userId);
+    const { status } = req.body;
+    const userId = req.userId;
     if (status === "UNPAID") {
       return res.status(200).json({
         message: "Order was not paid and has been deleted!",
         success: true,
       });
     } else if ("PAID") {
-  
-      
       const cartItems = await addToCartModel.find({ userId });
       if (cartItems.length === 0) {
         return res.status(400).json({ message: "Cart empty!!!" });
       }
-      
+
       const items = cartItems.map((item) => ({
         productId: item.productId,
         quantity: item.quantity,
