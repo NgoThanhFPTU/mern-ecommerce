@@ -198,7 +198,7 @@ export default function Profile() {
           <p><strong>Total Amount:</strong> ${formatCurrency(
             order.totalAmount
           )}</p>
-          <p><strong>Status:</strong> 
+          <p style="margin-bottom: 8px"><strong>Status:</strong> 
             <span style="color: ${order.status === "Paid" ? "green" : "red"};">
               ${order.status}
             </span>
@@ -355,7 +355,7 @@ export default function Profile() {
             </h1>
 
             {historyPayment.length ? (
-              <div className="space-y-4">
+              <div className="space-y-4" style={{overflow:"auto",maxHeight:"490px"}}>
                 {historyPayment.map((order, index) => (
                   <div
                     key={index}

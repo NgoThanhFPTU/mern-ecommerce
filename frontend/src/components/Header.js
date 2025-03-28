@@ -112,7 +112,7 @@ const Header = () => {
                   )}
                 </nav>
                 <nav className="flex flex-col gap-2">
-                  {user?.role === ROLE.GENERAL && (
+                  {user?.role && (
                     <Link
                       to={"/profile"}
                       className="block px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 transition"
