@@ -42,7 +42,7 @@ const createOrder = async (req, res) => {
         const orderPayment = {
           amount: order.totalAmount,
           orderCode: new Date().getTime(),
-          returnUrl: "http://localhost:3000/payment-success",
+          returnUrl: `http://localhost:3000/payment-success?orderId=${order._id}`,
           cancelUrl: "http://localhost:3000/payment-failed",
           description: "Pay shopping bills",
         };
@@ -50,7 +50,6 @@ const createOrder = async (req, res) => {
         const paymentLink = await payos.createPaymentLink(orderPayment);
         return res.status(201).json({
           message: "Đơn hàng đã được tạo!",
-          order,
           paymentUrl: paymentLink.checkoutUrl,
         });
       } catch (error) {
@@ -63,8 +62,6 @@ const createOrder = async (req, res) => {
           .json({ message: "Error Pay shopping bills", error });
       }
     }
-
-    await addToCartModel.deleteMany({ userId });
 
     res.status(201).json({ message: "Đơn hàng đã được tạo!", order });
   } catch (error) {
