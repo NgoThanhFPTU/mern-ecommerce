@@ -4,10 +4,11 @@ import Swal from "sweetalert2";
 import SummaryApi from "../../common";
 import Context from "../../context";
 
-const PaymentSuccess = () => {
+const PaymentStatus = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const orderId = searchParams.get("orderId");
+  const status = searchParams.get("status");
   const { fetchUserAddToCart } = useContext(Context);
 
   useEffect(() => {
@@ -19,17 +20,26 @@ const PaymentSuccess = () => {
           method: SummaryApi.confirmPayment.method,
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ orderId, status: "PAID" }),
+          body: JSON.stringify({
+            orderId,
+            status: status === "CANCELLED" ? "UNPAID" : "PAID",
+          }),
         });
 
         const responseData = await response.json();
 
         if (responseData.success) {
           Swal.fire({
-            title: "Payment Successful!",
-            text: "Your order has been updated, and your cart has been cleared.",
-            icon: "success",
-            timer: 3000,
+            title:
+              status === "CANCELLED"
+                ? "Order Cancelled!"
+                : "Payment Successful!",
+            text:
+              status === "CANCELLED"
+                ? "Your order has been canceled because the payment was not completed."
+                : "Thank you for your purchase! Your order has been confirmed.",
+            icon: status === "CANCELLED" ? "warning" : "success",
+            timer: 6000,
             showConfirmButton: false,
           });
 
@@ -40,17 +50,18 @@ const PaymentSuccess = () => {
         } else {
           Swal.fire({
             title: "Payment Failed!",
-            text: responseData.message || "Something went wrong.",
+            text:
+              responseData.message ||
+              "We couldn't process your payment. Please try again or contact support.",
             icon: "error",
           });
         }
       } catch (error) {
         Swal.fire({
-          title: "Error!",
-          text: "Payment confirmation failed. Please try again.",
+          title: "Error Occurred",
+          text: "Something went wrong while confirming your payment. Please try again later.",
           icon: "error",
         });
-        console.error("Payment confirmation error:", error);
       }
     };
 
@@ -60,4 +71,4 @@ const PaymentSuccess = () => {
   return null;
 };
 
-export default PaymentSuccess;
+export default PaymentStatus;

@@ -43,7 +43,7 @@ const createOrder = async (req, res) => {
           amount: order.totalAmount,
           orderCode: new Date().getTime(),
           returnUrl: `http://localhost:3000/payment-success?orderId=${order._id}`,
-          cancelUrl: "http://localhost:3000/payment-failed",
+          cancelUrl: `http://localhost:3000/payment-failed?orderId=${order._id}`,
           description: "Pay shopping bills",
         };
 

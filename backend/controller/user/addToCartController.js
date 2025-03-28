@@ -5,8 +5,10 @@ const addToCartController = async (req, res) => {
   try {
     const { productId } = req?.body;
     const currentUser = req.userId;
-
-    const isProductAvailable = await addToCartModel.findOne({ productId });
+    const isProductAvailable = await addToCartModel.findOne({
+      productId,
+      userId: currentUser,
+    });
     const product = await productModel.findById(productId);
 
     if (!product) {
