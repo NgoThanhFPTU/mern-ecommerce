@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import productCategory from '../helpers/productCategory'
 import VerticalCard from '../components/VerticalCard'
 import SummaryApi from '../common'
@@ -38,7 +38,7 @@ const CategoryProduct = () => {
     }
 
     const handleSelectCategory = (e) =>{
-      const {name , value, checked} =  e.target
+      const { value, checked} =  e.target
 
       setSelectCategory((preve)=>{
         return{

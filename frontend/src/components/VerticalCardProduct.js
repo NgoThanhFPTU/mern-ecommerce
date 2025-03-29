@@ -10,8 +10,6 @@ const VerticalCardProduct = ({category, heading}) => {
     const [data,setData] = useState([])
     const [loading,setLoading] = useState(true)
     const loadingList = new Array(13).fill(null)
-
-    const [scroll,setScroll] = useState(0)
     const scrollElement = useRef()
 
     const { fetchUserAddToCart } = useContext(Context)
@@ -76,7 +74,7 @@ const VerticalCardProduct = ({category, heading}) => {
                         return(
                             <Link to={"product/"+product?._id} className='w-full min-w-[280px]  md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow '>
                                 <div className='bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center'>
-                                    <img src={product.productImage[0]} className='object-scale-down h-full hover:scale-110 transition-all mix-blend-multiply'/>
+                                    <img alt='img' src={product.productImage[0]} className='object-scale-down h-full hover:scale-110 transition-all mix-blend-multiply'/>
                                 </div>
                                 <div className='p-4 grid gap-3'>
                                     <h2 className='font-medium text-base md:text-lg text-ellipsis line-clamp-1 text-black'>{product?.productName}</h2>

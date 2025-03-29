@@ -8,7 +8,6 @@ import Swal from "sweetalert2";
 
 const Cart = () => {
   const user = useSelector((state) => state?.user?.user);
-  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const context = useContext(Context);
@@ -187,6 +186,7 @@ const Cart = () => {
                   >
                     <div className="w-32 h-32 bg-slate-200">
                       <img
+                        alt="img"
                         src={product?.productId?.productImage[0]}
                         className="w-full h-full object-scale-down mix-blend-multiply"
                       />
