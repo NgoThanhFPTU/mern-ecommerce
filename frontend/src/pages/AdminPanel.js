@@ -25,7 +25,7 @@ const AdminPanel = () => {
         if (!file) return;
     
         setUploading(true);
-        const storageRef = ref(storage, `admin_avatars`);
+        const storageRef = ref(storage, `avatar/${user._id}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
     
         uploadTask.on(

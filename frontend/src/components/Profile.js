@@ -84,7 +84,7 @@ export default function Profile() {
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-    const storageRef = ref(storage, `admin_avatars`);
+    const storageRef = ref(storage, `avatar/${user._id}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -95,10 +95,7 @@ export default function Profile() {
       },
       async () => {
         try {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
-          console.log(user._id);
-          
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);        
           const fetchResponse = await fetch(SummaryApi.updateAvatar.url, {
             method: SummaryApi.updateAvatar.method,
             credentials: "include",
