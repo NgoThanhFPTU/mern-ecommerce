@@ -24,6 +24,14 @@ async function userSignInController(req, res) {
       });
     }
 
+    if (!user.isVerified) {
+      return res.status(403).json({
+          success: false,
+          message: "Please verify your email before logging in.",
+          notVerified: false
+      });
+  }
+
     if (user.isBanned) {
       return res.status(403).json({
         message: "Your account has been banned. Please contact support.",

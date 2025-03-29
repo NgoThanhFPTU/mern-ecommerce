@@ -58,6 +58,15 @@ const Login = () => {
       );
       return;
     }
+    
+    if (dataApi.notVerified) {
+      SweetAlert(
+        "Your account is not verified!",
+        "Please check your email for the verification link or contact support for assistance.",
+        "error"
+      );
+      return;
+    }
 
     if (dataApi.isBanned) {
       SweetAlert(

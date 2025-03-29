@@ -12,6 +12,8 @@ const userSchema = new mongoose.Schema({
     profilePic : String,
     role : String,
     phone: String,
+    isVerified: { type: Boolean, default: false },
+    verificationToken: { type: String },
     isBanned: {
         type: Boolean,
         default: false,

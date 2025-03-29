@@ -10,6 +10,7 @@ const userLogout = require("../controller/user/userLogout");
 const allUsers = require("../controller/user/allUsers");
 const updateUser = require("../controller/user/updateUser");
 const banUser = require("../controller/user/banUser");
+const verifyEmailController = require("../controller/user/verifyEmailController");
 const confirmPayment = require("../controller/user/confirmPayment");
 const createOrder = require("../controller/user/createOrder");
 const updateAvatar = require("../controller/user/updateAvatar");
@@ -30,19 +31,19 @@ const searchProduct = require("../controller/product/searchProduct");
 const filterProductController = require("../controller/product/filterProduct");
 const adminStatistics = require("../controller/statistic/adminStatistic");
 
-router.post("/signup", userSignUpController);
-router.post("/signin", userSignInController);
-router.get("/user-details", authToken, userDetailsController);
-router.get("/userLogout", userLogout);
-
 // Payment
 router.post("/create-order", authToken, createOrder);
 router.post("/confirm-payment", authToken, confirmPayment);
 
 // Account
+router.post("/signup", userSignUpController);
+router.post("/signin", userSignInController);
+router.get("/verify-email/:token", verifyEmailController);
 router.get("/history-payment", authToken, PaymentHistory);
 router.post("/update-avatar", authToken, updateAvatar);
 router.post("/update-profile", authToken, updateProfile);
+router.get("/user-details", authToken, userDetailsController);
+router.get("/userLogout", userLogout);
 
 //admin panel
 router.get("/all-user", authToken, allUsers);
