@@ -28,7 +28,7 @@ async function userSignInController(req, res) {
       return res.status(403).json({
           success: false,
           message: "Please verify your email before logging in.",
-          notVerified: false
+          notVerified: true
       });
   }
 

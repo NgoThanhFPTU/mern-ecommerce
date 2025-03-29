@@ -71,10 +71,22 @@ async function sendVerificationEmail(email, token) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: "Email Verification",
-    html: `<h2>Verify Your Email</h2>
-            <p>Click the link below to verify your email:</p>
-            <a href="${verificationLink}">${verificationLink}</a>`,
+    subject: "Verify Your Email - Welcome to Our Service",
+    html: `
+      <div style="max-width: 600px; margin: auto; padding: 20px; font-family: Arial, sans-serif; border: 1px solid #ddd; border-radius: 10px;">
+        <h2 style="color: #333; text-align: center;">Welcome to Our Service!</h2>
+        <p style="font-size: 16px; color: #555;">Thank you for signing up. Please verify your email address by clicking the button below:</p>
+        <div style="text-align: center; margin: 20px 0;">
+          <a href="${verificationLink}" 
+             style="background-color: #007bff; color: #fff; padding: 12px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">
+             Verify Your Email
+          </a>
+        </div>
+        <p style="font-size: 14px; color: #777;">If you didn’t create an account, you can safely ignore this email.</p>
+        <hr style="border: none; border-top: 1px solid #ddd;">
+        <p style="font-size: 12px; color: #aaa; text-align: center;">&copy; 2025 Our Service. All rights reserved.</p>
+      </div>
+    `,
   };
 
   await transporter.sendMail(mailOptions);

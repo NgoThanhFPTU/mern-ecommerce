@@ -60,7 +60,7 @@ const SignUp = () => {
       if (dataApi.success) {
         SweetAlert(
           "Registration successful!",
-          "Your account has been created successfully. Welcome aboard!",
+          "Your account has been created successfully. Please check your email to verify your account before logging in.",
           "success"
         );
         navigate("/login");
