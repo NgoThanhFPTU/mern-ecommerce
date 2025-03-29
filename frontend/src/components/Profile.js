@@ -36,7 +36,6 @@ export default function Profile() {
         });
         const responseData = await response.json();
         setHistoryPayment(responseData.data);
-        console.log(responseData.data);
       };
 
       fetchOrderHistory();
@@ -98,6 +97,8 @@ export default function Profile() {
         try {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
+          console.log(user._id);
+          
           const fetchResponse = await fetch(SummaryApi.updateAvatar.url, {
             method: SummaryApi.updateAvatar.method,
             credentials: "include",
@@ -354,7 +355,7 @@ export default function Profile() {
               Order history
             </h1>
 
-            {historyPayment.length ? (
+            {historyPayment && historyPayment.length ? (
               <div className="space-y-4" style={{overflow:"auto",maxHeight:"490px"}}>
                 {historyPayment.map((order, index) => (
                   <div
