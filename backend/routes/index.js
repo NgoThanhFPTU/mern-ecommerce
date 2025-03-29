@@ -27,6 +27,7 @@ const updateAddToCartProduct = require("../controller/user/updateAddToCartProduc
 const deleteAddToCartProduct = require("../controller/user/deleteAddToCartProduct");
 const searchProduct = require("../controller/product/searchProduct");
 const filterProductController = require("../controller/product/filterProduct");
+const adminStatistics = require("../controller/statistic/adminStatistic");
 
 router.post("/signup", userSignUpController);
 router.post("/signin", userSignInController);
@@ -45,6 +46,7 @@ router.post("/update-profile", authToken, updateProfile);
 router.get("/all-user", authToken, allUsers);
 router.post("/update-user", authToken, updateUser);
 router.post("/ban-user", authToken, banUser);
+router.get("/revenue-statistic", adminStatistics);
 
 
 //product

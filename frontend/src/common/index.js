@@ -96,6 +96,10 @@ const SummaryApi = {
     filterProduct : {
         url : `${backendDomin}/api/filter-product`,
         method : 'post'
+    },
+    revenueStatistics : {
+        url : `${backendDomin}/api/revenue-statistic`,
+        method : 'get'
     }
 }
 

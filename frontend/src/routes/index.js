@@ -13,6 +13,8 @@ import Cart from '../pages/Cart'
 import SearchProduct from '../pages/SearchProduct'
 import Profile from '../components/Profile'
 import PaymentStatus from '../components/Payment/PaymentStatus'
+import RevenueStatistics from '../pages/AdminStatistic'
+
 
 const router = createBrowserRouter([
     {
@@ -71,6 +73,10 @@ const router = createBrowserRouter([
                     {
                         path : "all-products",
                         element : <AllProducts/>
+                    },
+                    {
+                        path : "revenue-statistics",
+                        element : <RevenueStatistics/>
                     }
                 ]
             },
