@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import SummaryApi from "../common";
 import Context from "../context";
 import SweetAlert from "sweetalert";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -58,7 +59,7 @@ const Login = () => {
       );
       return;
     }
-    
+
     if (dataApi.notVerified) {
       SweetAlert(
         "Your account is not verified!",
@@ -88,6 +89,59 @@ const Login = () => {
         fetchUserDetails();
         fetchUserAddToCart();
       }, 400);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    const { value: email } = await Swal.fire({
+      title: "Forgot Password?",
+      input: "email",
+      inputLabel: "Enter your email to receive reset instructions:",
+      inputPlaceholder: "Enter your email",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Submit",
+      cancelButtonText: "Cancel",
+      allowOutsideClick: false,
+      preConfirm: (email) => {
+        if (!email) {
+          Swal.showValidationMessage("Please enter your email!");
+          return false;
+        }
+        return email;
+      },
+    });
+
+    if (!email) return;
+
+    try {
+      const response = await fetch(SummaryApi.forgotPassword.url, {
+        method: SummaryApi.forgotPassword.method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        Swal.fire(
+          "New Password Sent!",
+          "A new password has been sent to your email!",
+          "success"
+        );
+      } else {
+        Swal.fire(
+          "Password Reset Failed!",
+          result.message ||
+            "An error occurred while resetting your password. Please try again later.",
+          "error"
+        );
+      }
+    } catch (error) {
+      Swal.fire("Error!", "Unable to process request at the moment.", "error");
     }
   };
 
@@ -133,7 +187,7 @@ const Login = () => {
                 </div>
               </div>
               <Link
-                to={"/forgot-password"}
+                onClick={handleForgotPassword}
                 className="block w-fit ml-auto hover:underline hover:text-red-600"
               >
                 Forgot password ?

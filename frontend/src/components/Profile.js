@@ -9,6 +9,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../helpers/firebaseConfig";
 import Swal from "sweetalert2";
 import { HiOutlineEye } from "react-icons/hi";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export default function Profile() {
   const user = useSelector((state) => state?.user?.user);
@@ -16,9 +17,14 @@ export default function Profile() {
   const [selectedTab, setSelectedTab] = useState("account");
   const [editing, setEditing] = useState(false);
   const [historyPayment, setHistoryPayment] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   useEffect(() => {
@@ -44,11 +50,16 @@ export default function Profile() {
 
   const validateInput = () => {
     const PHONE_REGEX = /^[0-9]{10,11}$/;
-    const trimmedName = formData.name.trim().replace(/\s+/g, " ");
-    const trimmedPhone = formData.phone.trim();
-    setFormData({ name: trimmedName, phone: trimmedPhone });
-    formData.name = trimmedName;
-    formData.phone = trimmedPhone;
+    const trimmedName = formData.name?.trim().replace(/\s+/g, " ");
+    const trimmedNewPassword = formData.newPassword
+      ?.trim()
+      .replace(/\s+/g, " ");
+    const trimmedConfirmPassword = formData.confirmPassword
+      ?.trim()
+      .replace(/\s+/g, " ")
+      .trim()
+      .replace(/\s+/g, " ");
+    const trimmedPhone = formData.phone?.trim();
 
     if (trimmedName.length > 50) {
       Swal.fire(
@@ -56,7 +67,6 @@ export default function Profile() {
         `Name is too long! Maximum allowed is ${50} characters.`,
         "error"
       );
-      setFormData({ name: trimmedName.substring(0, 50), phone: trimmedPhone });
       return false;
     }
 
@@ -78,6 +88,53 @@ export default function Profile() {
       return false;
     }
 
+    if (trimmedNewPassword || trimmedConfirmPassword) {
+      if (
+        trimmedNewPassword?.length < 8 ||
+        trimmedConfirmPassword?.length < 8
+      ) {
+        Swal.fire(
+          "Error!",
+          "Password must be at least 8 characters long.",
+          "error"
+        );
+        return false;
+      }
+
+      if (
+        trimmedNewPassword?.length > 30 ||
+        trimmedConfirmPassword?.length > 30
+      ) {
+        Swal.fire(
+          "Error!",
+          "Password is too long! Maximum allowed is 30 characters.",
+          "error"
+        );
+        return false;
+      }
+      if (trimmedNewPassword !== trimmedConfirmPassword) {
+        Swal.fire(
+          "Error!",
+          "Passwords do not match. Please try again.",
+          "error"
+        );
+        return false;
+      }
+    }
+
+    setFormData({
+      name: trimmedName,
+      phone: trimmedPhone,
+      newPassword: trimmedNewPassword ? trimmedNewPassword : "",
+      confirmPassword: trimmedConfirmPassword ? trimmedConfirmPassword : "",
+    });
+    formData.name = trimmedName;
+    formData.phone = trimmedPhone;
+    formData.newPassword = trimmedNewPassword ? trimmedNewPassword : "";
+    formData.confirmPassword = trimmedConfirmPassword
+      ? trimmedConfirmPassword
+      : "";
+
     return true;
   };
 
@@ -95,7 +152,7 @@ export default function Profile() {
       },
       async () => {
         try {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);        
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
           const fetchResponse = await fetch(SummaryApi.updateAvatar.url, {
             method: SummaryApi.updateAvatar.method,
             credentials: "include",
@@ -142,6 +199,8 @@ export default function Profile() {
           userId: user._id,
           name: formData.name.trim().replace(/\s+/g, " "),
           phone: formData.phone.trim(),
+          newPassword: formData.newPassword,
+          confirmPassword: formData.confirmPassword,
         }),
       });
 
@@ -303,7 +362,7 @@ export default function Profile() {
                     value={formData.name}
                     onChange={handleChange}
                     className="border border-gray-300 p-3 w-full mb-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Tên đầy đủ"
+                    placeholder="Full Name"
                   />
                   <p className="text-gray-600 mb-2">
                     <strong>Email:</strong> {user.email}
@@ -314,13 +373,58 @@ export default function Profile() {
                     value={formData.phone}
                     onChange={handleChange}
                     className="border border-gray-300 p-3 w-full mb-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Số điện thoại"
+                    placeholder="Phone Number"
                   />
+
+                  <div className="relative w-full mb-3">
+                    <input
+                      type={showNewPassword ? "text" : "password"}
+                      name="newPassword"
+                      value={formData.newPassword}
+                      onChange={handleChange}
+                      className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
+                      placeholder="New Password"
+                    />
+                    <span
+                      className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                    >
+                      {showNewPassword ? (
+                        <AiOutlineEyeInvisible size={20} />
+                      ) : (
+                        <AiOutlineEye size={20} />
+                      )}
+                    </span>
+                  </div>
+
+                  <div className="relative w-full mb-3">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
+                      placeholder="Confirm Password"
+                    />
+                    <span
+                      className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? (
+                        <AiOutlineEyeInvisible size={20} />
+                      ) : (
+                        <AiOutlineEye size={20} />
+                      )}
+                    </span>
+                  </div>
+
                   <button
                     onClick={handleUpdateProfile}
                     className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 transition-all"
                   >
-                    Save changes
+                    Save Changes
                   </button>
                 </>
               ) : (
@@ -332,6 +436,23 @@ export default function Profile() {
                     <strong className="text-gray-700">Email:</strong>{" "}
                     {user.email}
                   </p>
+                  <div
+                    className="relative inline-block"
+                    onMouseEnter={() => setShowPassword(true)}
+                    onMouseLeave={() => setShowPassword(false)}
+                  >
+                    <p className="text-lg mb-2 cursor-pointer relative">
+                      <strong className="text-gray-700">Password:</strong>{" "}
+                      <span className="bg-gray-100 px-2 py-1 rounded-md">
+                        ********************
+                      </span>
+                      {showPassword && (
+                        <span className="absolute left-0 top-full mt-2 bg-gray-800 text-white text-sm py-1 px-3 rounded-lg shadow-md">
+                          {user.password}
+                        </span>
+                      )}
+                    </p>
+                  </div>
                   <p className="text-lg mb-4">
                     <strong className="text-gray-700">Phone:</strong>{" "}
                     {user.phone}
@@ -353,7 +474,10 @@ export default function Profile() {
             </h1>
 
             {historyPayment && historyPayment.length ? (
-              <div className="space-y-4" style={{overflow:"auto",maxHeight:"490px"}}>
+              <div
+                className="space-y-4"
+                style={{ overflow: "auto", maxHeight: "490px" }}
+              >
                 {historyPayment.map((order, index) => (
                   <div
                     key={index}

@@ -5,6 +5,7 @@ const router = express.Router();
 const userSignUpController = require("../controller/user/userSignUp");
 const userSignInController = require("../controller/user/userSignIn");
 const userDetailsController = require("../controller/user/userDetails");
+const changePassword = require("../controller/user/changePassword");
 const authToken = require("../middleware/authToken");
 const userLogout = require("../controller/user/userLogout");
 const allUsers = require("../controller/user/allUsers");
@@ -38,6 +39,7 @@ router.post("/confirm-payment", authToken, confirmPayment);
 // Account
 router.post("/signup", userSignUpController);
 router.post("/signin", userSignInController);
+router.post("/forgot-password", changePassword);
 router.get("/verify-email/:token", verifyEmailController);
 router.get("/history-payment", authToken, PaymentHistory);
 router.post("/update-avatar", authToken, updateAvatar);
@@ -50,7 +52,6 @@ router.get("/all-user", authToken, allUsers);
 router.post("/update-user", authToken, updateUser);
 router.post("/ban-user", authToken, banUser);
 router.get("/revenue-statistic", adminStatistics);
-
 
 //product
 router.post("/upload-product", authToken, UploadProductController);
