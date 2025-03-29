@@ -18,6 +18,14 @@ const addToCart = async(e,id) =>{
 
     const responseData = await response.json()
 
+    if(responseData.error){    
+        SweetAlert(
+            "Login Required!",
+            "You need to login to add products to your cart.",
+            "error"
+        );
+    }
+
     if(responseData.success){
         SweetAlert(
             "Product added successfully!",
@@ -26,7 +34,7 @@ const addToCart = async(e,id) =>{
         );
     }
 
-    if(responseData.error){
+    if(responseData.available){    
         SweetAlert(
             "Failed to add product!",
             "This product is already in your cart. You cannot add it again.",

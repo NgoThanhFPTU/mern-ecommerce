@@ -75,7 +75,6 @@ const AdminEditProduct = ({ onClose, productData, fetchdata }) => {
     const responseData = await response.json();
 
     if (responseData.success) {
-      SweetAlert("Login successful!", "Welcome back!", "success");
       SweetAlert(
         "Product uploaded successfully!",
         "Your product has been listed successfully.",

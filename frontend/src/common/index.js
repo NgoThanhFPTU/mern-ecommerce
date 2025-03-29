@@ -25,6 +25,10 @@ const SummaryApi = {
         url : `${backendDomin}/api/confirm-payment`,
         method : "post"
     },
+    historyPayment : {
+        url : `${backendDomin}/api/history-payment`,
+        method : 'get'
+    },
     allUser : {
         url : `${backendDomin}/api/all-user`,
         method : 'get'

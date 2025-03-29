@@ -8,12 +8,14 @@ import SweetAlert from "sweetalert";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../helpers/firebaseConfig";
 import Swal from "sweetalert2";
+import { HiOutlineEye } from "react-icons/hi";
 
 export default function Profile() {
   const user = useSelector((state) => state?.user?.user);
   const dispatch = useDispatch();
   const [selectedTab, setSelectedTab] = useState("account");
   const [editing, setEditing] = useState(false);
+  const [historyPayment, setHistoryPayment] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -25,6 +27,19 @@ export default function Profile() {
         name: user.name || "",
         phone: user.phone || "",
       });
+
+      const fetchOrderHistory = async () => {
+        const response = await fetch(SummaryApi.historyPayment.url, {
+          method: SummaryApi.historyPayment.method,
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        });
+        const responseData = await response.json();
+        setHistoryPayment(responseData.data);
+        console.log(responseData.data);
+      };
+
+      fetchOrderHistory();
     }
   }, [user]);
 
@@ -139,7 +154,7 @@ export default function Profile() {
         setTimeout(() => {
           SweetAlert(
             "Update information success!",
-            "Thông tin đã được cập nhật",
+            "Information has been updated!",
             "success"
           );
         }, 300);
@@ -150,6 +165,65 @@ export default function Profile() {
     } catch (err) {
       console.error("Error update", err);
     }
+  };
+
+  const handleShowDetail = (order) => {
+    const productListHtml = order.items
+      .map(
+        (item) => `
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+          <img src="${
+            item.productId.productImage[0] || "/placeholder.jpg"
+          }" alt="${item.productId.productName}" 
+            style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+          <div>
+            <p><strong>${item.productId.productName}</strong></p>
+            <p>Brand: ${item.productId.brandName}</p>
+            <p>Category: ${item.productId.category}</p>
+            <p>Price: <strong>${formatCurrency(
+              item.priceAtPurchase
+            )}</strong></p>
+            <p>Quantity: <strong>${item.quantity}</strong></p>
+          </div>
+        </div>
+      `
+      )
+      .join("");
+
+    Swal.fire({
+      title: `Order Details`,
+      html: `
+        <div style="text-align: left;">
+          <p><strong>Order Date:</strong> ${formatDate(order.createdAt)}</p>
+          <p><strong>Total Amount:</strong> ${formatCurrency(
+            order.totalAmount
+          )}</p>
+          <p style="margin-bottom: 8px"><strong>Status:</strong> 
+            <span style="color: ${order.status === "Paid" ? "green" : "red"};">
+              ${order.status}
+            </span>
+          </p>
+          <hr>
+          <hr>
+          <h3>Products in Order:</h3>
+          ${productListHtml}
+        </div>
+      `,
+      confirmButtonText: "Close",
+      confirmButtonColor: "#DC2626",
+    });
+  };
+
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+  };
+
+  const formatCurrency = (amount) => {
+    return amount.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
   };
 
   if (!user) {
@@ -163,7 +237,7 @@ export default function Profile() {
   return (
     <div className="flex h-screen bg-gray-50">
       <div className="w-1/4 bg-white shadow-md p-6">
-        <h2 className="text-xl font-bold mb-6 text-gray-700">Tài khoản</h2>
+        <h2 className="text-xl font-bold mb-6 text-gray-700">Account</h2>
         <ul className="space-y-4">
           <li
             className={`flex items-center p-3 cursor-pointer rounded-lg transition duration-200 ${
@@ -173,7 +247,7 @@ export default function Profile() {
             }`}
             onClick={() => setSelectedTab("account")}
           >
-            <FaUser className="mr-3" /> Quản lý tài khoản
+            <FaUser className="mr-3" /> Account Management
           </li>
           <li
             className={`flex items-center p-3 cursor-pointer rounded-lg transition duration-200 ${
@@ -183,19 +257,19 @@ export default function Profile() {
             }`}
             onClick={() => setSelectedTab("orders")}
           >
-            <FaHistory className="mr-3" /> Lịch sử đơn hàng
+            <FaHistory className="mr-3" /> Order history
           </li>
         </ul>
       </div>
 
       <div className="w-3/4 p-8">
         {selectedTab === "account" ? (
-          <div className="flex flex-col items-start">
+          <div className="bg-white p-4 rounded-xl shadow-lg w-full max-w-lg mx-auto">
             <h1 className="text-3xl font-bold text-gray-800 mb-6">
-              Quản lý tài khoản
+              Account Management
             </h1>
 
-            <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+            <div className="bg-white p-8 rounded-xl w-full max-w-md">
               <div className="relative flex flex-col items-center mb-6">
                 <input
                   type="file"
@@ -218,7 +292,7 @@ export default function Profile() {
                     <FaRegCircleUser className="w-28 h-28" />
                   )}
                   <span className="rounded-full absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                    Thay đổi ảnh
+                    Change photo
                   </span>
                 </label>
               </div>
@@ -248,50 +322,96 @@ export default function Profile() {
                     onClick={handleUpdateProfile}
                     className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 transition-all"
                   >
-                    Lưu thay đổi
+                    Save changes
                   </button>
                 </>
               ) : (
                 <>
                   <p className="text-lg mb-2">
-                    <strong className="text-gray-700">Tên:</strong> {user.name}
+                    <strong className="text-gray-700">Name:</strong> {user.name}
                   </p>
                   <p className="text-lg mb-2">
                     <strong className="text-gray-700">Email:</strong>{" "}
                     {user.email}
                   </p>
                   <p className="text-lg mb-4">
-                    <strong className="text-gray-700">SĐT:</strong> {user.phone}
+                    <strong className="text-gray-700">Phone:</strong>{" "}
+                    {user.phone}
                   </p>
                   <button
                     onClick={() => setEditing(true)}
-                    className="w-full bg-gray-700 text-white p-3 rounded-lg shadow-md hover:bg-gray-800 transition-all"
+                    className="w-full bg-red-500 text-white p-3 rounded-lg shadow-md hover:bg-gray-800 transition-all"
                   >
-                    Chỉnh sửa
+                    Edit
                   </button>
                 </>
               )}
             </div>
           </div>
         ) : (
-          (
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-6">Lịch sử đơn hàng</h1>
-          {/* //     <div className="bg-white p-6 rounded-lg shadow-md max-w-md">
-          //       {user.orders.length ? (
-          //         user.orders.map((order, index) => (
-          //           <div key={index} className="p-4 border-b last:border-b-0">
-          //             <p><strong>Mã đơn:</strong> {order.id}</p>
-          //             <p><strong>Tổng:</strong> ${order.total}</p>
-          //             <p><strong>Ngày:</strong> {order.date}</p>
-          //           </div>
-          //         ))
-          //       ) : (
-          //         <p className="text-gray-500">Không có đơn hàng nào.</p>
-          //       )}
-          //     </div> */}
-            </div>
-          )
+          <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl mx-auto">
+            <h1 className="text-3xl font-bold text-gray-800 mb-6">
+              Order history
+            </h1>
+
+            {historyPayment.length ? (
+              <div className="space-y-4" style={{overflow:"auto",maxHeight:"490px"}}>
+                {historyPayment.map((order, index) => (
+                  <div
+                    key={index}
+                    className="p-4 border rounded-lg shadow-sm bg-gray-50"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                      <div className="w-20 h-20">
+                        <img
+                          src={
+                            order.items[0]?.productId?.productImage[0] ||
+                            "/placeholder.jpg"
+                          }
+                          alt="Product"
+                          className="w-full h-full object-cover rounded"
+                        />
+                      </div>
+
+                      <div className="col-span-2">
+                        <p className="font-semibold text-lg">
+                          Order id: {order._id}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Date created: {formatDate(order.createdAt)}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-lg font-bold">
+                          {formatCurrency(order.totalAmount)}
+                        </p>
+                        <p
+                          className={`text-sm font-semibold ${
+                            order.status === "Paid"
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }`}
+                        >
+                          {order.status}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end mt-3">
+                      <button
+                        onClick={() => handleShowDetail(order)}
+                        className="text-gray-600 hover:text-blue-500 transition"
+                      >
+                        <HiOutlineEye size={22} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500 text-center py-4">No orders yet.</p>
+            )}
+          </div>
         )}
       </div>
     </div>

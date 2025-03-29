@@ -4,6 +4,7 @@ import Context from "../context";
 import displayINRCurrency from "../helpers/displayCurrency";
 import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 const Cart = () => {
   const user = useSelector((state) => state?.user?.user);
@@ -106,22 +107,47 @@ const Cart = () => {
   };
 
   const deleteCartProduct = async (id) => {
-    const response = await fetch(SummaryApi.deleteCartProduct.url, {
-      method: SummaryApi.deleteCartProduct.method,
-      credentials: "include",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        _id: id,
-      }),
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to remove this product from your cart?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, remove it!",
+      cancelButtonText: "Cancel",
     });
 
-    const responseData = await response.json();
+    if (result.isConfirmed) {
+      const response = await fetch(SummaryApi.deleteCartProduct.url, {
+        method: SummaryApi.deleteCartProduct.method,
+        credentials: "include",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ _id: id }),
+      });
 
-    if (responseData.success) {
-      fetchData();
-      context.fetchUserAddToCart();
+      const responseData = await response.json();
+
+      if (responseData.success) {
+        Swal.fire({
+          title: "Removed!",
+          text: "The product has been removed from your cart.",
+          icon: "success",
+          timer: 4000,
+          showConfirmButton: false,
+        });
+
+        fetchData();
+        context.fetchUserAddToCart();
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to remove the product. Please try again.",
+          icon: "error",
+        });
+      }
     }
   };
 
