@@ -66,7 +66,7 @@ async function sendVerificationEmail(email, token) {
     },
   });
 
-  const verificationLink = `http://localhost:8080/api/verify-email/${token}`;
+  const verificationLink = `https://localhost:8080/api/verify-email/${token}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
